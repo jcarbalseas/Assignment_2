@@ -213,53 +213,99 @@
 #     retrieved_data = get_from_ipfs(cid)
 #     print(f"Data retrieved from IPFS: {retrieved_data}")
 
+# import requests
+# import json
+
+# pinata_api_key = '09e278d268fd8cafef67'  
+
+# def pin_to_ipfs(data):
+#     assert isinstance(data, dict), "Error pin_to_ipfs expects a dictionary"
+
+#     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
+
+#     payload = {
+#         "pinataMetadata": {
+#             "name": "PinnedData.json"
+#         },
+#         "pinataOptions": {
+#             "cidVersion": 1
+#         },
+#         "pinataContent": data
+#     }
+
+#     headers = {
+#         "Authorization": f"Bearer {pinata_api_key}",
+#         "Content-Type": "application/json"
+#     }
+
+#     response = requests.post(url, json=payload, headers=headers)
+
+#     if response.status_code == 200:
+#         cid = response.json()["IpfsHash"]
+#         return cid
+#     else:
+#         raise Exception(f"Error pinning to IPFS: {response.content}")
+
+# def get_from_ipfs(cid, content_type="json"):
+#     assert isinstance(cid, str), "get_from_ipfs accepts a cid in the form of a string"
+
+#     url = f"https://gateway.pinata.cloud/ipfs/{cid}"
+
+#     response = requests.get(url)
+
+#     if response.status_code == 200:
+#         if content_type == "json":
+#             data = response.json()
+#             assert isinstance(data, dict), "get_from_ipfs should return a dict"
+#             return data
+#         else:
+#             raise Exception(f"Unsupported content type: {content_type}")
+#     else:
+#         raise Exception(f"Error fetching from IPFS: {response.content}")
+
+# # Example usage
+# if __name__ == "__main__":
+#     test_data = {"name": "Bored Ape", "description": "Test Data"}
+
+#     try:
+#         cid = pin_to_ipfs(test_data)
+#         print(f"Data pinned to IPFS with CID: {cid}")
+
+#         retrieved_data = get_from_ipfs(cid)
+#         print(f"Data retrieved from IPFS: {retrieved_data}")
+#     except Exception as e:
+#         print(f"Error: {e}")
+
 import requests
 import json
 
-pinata_api_key = '09e278d268fd8cafef67'  
-
 def pin_to_ipfs(data):
-    assert isinstance(data, dict), "Error pin_to_ipfs expects a dictionary"
+    assert isinstance(data, dict), "Error: pin_to_ipfs expects a dictionary"
 
-    url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
-
-    payload = {
-        "pinataMetadata": {
-            "name": "PinnedData.json"
-        },
-        "pinataOptions": {
-            "cidVersion": 1
-        },
-        "pinataContent": data
+    url = "https://ipfs.infura.io:5001/api/v0/add"
+    files = {
+        'file': ('data.json', json.dumps(data), 'application/json')
     }
 
-    headers = {
-        "Authorization": f"Bearer {pinata_api_key}",
-        "Content-Type": "application/json"
-    }
-
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, files=files)
 
     if response.status_code == 200:
-        cid = response.json()["IpfsHash"]
+        response_json = response.json()
+        cid = response_json["Hash"]
         return cid
     else:
         raise Exception(f"Error pinning to IPFS: {response.content}")
 
-def get_from_ipfs(cid, content_type="json"):
-    assert isinstance(cid, str), "get_from_ipfs accepts a cid in the form of a string"
+def get_from_ipfs(cid):
+    assert isinstance(cid, str), "Error: get_from_ipfs expects a string CID"
 
-    url = f"https://gateway.pinata.cloud/ipfs/{cid}"
+    url = f"https://ipfs.infura.io:5001/api/v0/cat/{cid}"
 
     response = requests.get(url)
 
     if response.status_code == 200:
-        if content_type == "json":
-            data = response.json()
-            assert isinstance(data, dict), "get_from_ipfs should return a dict"
-            return data
-        else:
-            raise Exception(f"Unsupported content type: {content_type}")
+        data = response.json()
+        return data
     else:
         raise Exception(f"Error fetching from IPFS: {response.content}")
 
@@ -268,10 +314,13 @@ if __name__ == "__main__":
     test_data = {"name": "Bored Ape", "description": "Test Data"}
 
     try:
+        # Pin data to IPFS
         cid = pin_to_ipfs(test_data)
         print(f"Data pinned to IPFS with CID: {cid}")
 
+        # Retrieve data from IPFS using CID
         retrieved_data = get_from_ipfs(cid)
         print(f"Data retrieved from IPFS: {retrieved_data}")
     except Exception as e:
         print(f"Error: {e}")
+
