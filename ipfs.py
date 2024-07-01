@@ -337,30 +337,80 @@
 #     except Exception as e:
 #         print(f"Error: {e}")
 
+# import requests
+# import json
+
+# PINATA_API_KEY = '14b1d6f77160cb412d89'
+# PINATA_SECRET_API_KEY = '50734ff2b62333d7dd06c593d919284bedb4dd359bdf61c2ce1c384d082f5a2b'
+
+# def pin_to_ipfs(data):
+#     assert isinstance(data, dict), f"Error pin_to_ipfs expects a dictionary"
+    
+#     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
+#     headers = {
+#         "pinata_api_key": PINATA_API_KEY,
+#         "pinata_secret_api_key": PINATA_SECRET_API_KEY
+#     }
+#     response = requests.post(url, json=data, headers=headers)
+#     if response.status_code == 200:
+#         cid = response.json()["IpfsHash"]
+#         return cid
+#     else:
+#         raise Exception(f"Error pinning to IPFS: {response.status_code} {response.text}")
+
+# def get_from_ipfs(cid, content_type="json"):
+#     assert isinstance(cid, str), f"get_from_ipfs accepts a cid in the form of a string"
+    
+#     url = f"https://gateway.pinata.cloud/ipfs/{cid}"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         data = response.json()
+#         assert isinstance(data, dict), f"get_from_ipfs should return a dict"
+#         return data
+#     else:
+#         raise Exception(f"Error fetching from IPFS: {response.status_code} {response.text}")
+
+# # Example usage:
+# data_to_pin = {
+#     "name": "Bored Ape #489",
+#     "description": "Bored Ape Yacht Club",
+#     "image": "https://ipfs.io/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/489.png"
+# }
+
+# # Pin the data to IPFS
+# cid = pin_to_ipfs(data_to_pin)
+# print("Pinned CID:", cid)
+
+# # Retrieve the data from IPFS
+# retrieved_data = get_from_ipfs(cid)
+# print("Retrieved Data:", retrieved_data)
+
 import requests
 import json
 
-PINATA_API_KEY = '14b1d6f77160cb412d89'
-PINATA_SECRET_API_KEY = '50734ff2b62333d7dd06c593d919284bedb4dd359bdf61c2ce1c384d082f5a2b'
+# Replace these with your Pinata API key and secret
+PINATA_API_KEY = 'YOUR_PINATA_API_KEY'
+PINATA_SECRET_API_KEY = 'YOUR_PINATA_SECRET_API_KEY'
 
 def pin_to_ipfs(data):
     assert isinstance(data, dict), f"Error pin_to_ipfs expects a dictionary"
-    
+
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
     headers = {
-        "pinata_api_key": PINATA_API_KEY,
-        "pinata_secret_api_key": PINATA_SECRET_API_KEY
+        "Content-Type": "application/json",
+        "cc7702120b0c25b5ebb3": PINATA_API_KEY,
+        "aa66dd2d412cd48df633a5023e7fd4a59d181ca6a14897c70e0bbf5b56766593": PINATA_SECRET_API_KEY
     }
-    response = requests.post(url, json=data, headers=headers)
+    response = requests.post(url, data=json.dumps(data), headers=headers)
     if response.status_code == 200:
         cid = response.json()["IpfsHash"]
         return cid
     else:
-        raise Exception(f"Error pinning to IPFS: {response.status_code} {response.text}")
+        raise Exception(f"Failed to pin to IPFS: {response.status_code}, {response.text}")
 
 def get_from_ipfs(cid, content_type="json"):
     assert isinstance(cid, str), f"get_from_ipfs accepts a cid in the form of a string"
-    
+
     url = f"https://gateway.pinata.cloud/ipfs/{cid}"
     response = requests.get(url)
     if response.status_code == 200:
@@ -368,19 +418,4 @@ def get_from_ipfs(cid, content_type="json"):
         assert isinstance(data, dict), f"get_from_ipfs should return a dict"
         return data
     else:
-        raise Exception(f"Error fetching from IPFS: {response.status_code} {response.text}")
-
-# Example usage:
-data_to_pin = {
-    "name": "Bored Ape #489",
-    "description": "Bored Ape Yacht Club",
-    "image": "https://ipfs.io/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/489.png"
-}
-
-# Pin the data to IPFS
-cid = pin_to_ipfs(data_to_pin)
-print("Pinned CID:", cid)
-
-# Retrieve the data from IPFS
-retrieved_data = get_from_ipfs(cid)
-print("Retrieved Data:", retrieved_data)
+        raise Exception(f"Failed to get from IPFS: {response.status_code}, {response.text}")
