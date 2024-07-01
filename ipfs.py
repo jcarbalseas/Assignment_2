@@ -389,8 +389,8 @@ import requests
 import json
 
 # Replace these with your Pinata API key and secret
-PINATA_API_KEY = 'YOUR_PINATA_API_KEY'
-PINATA_SECRET_API_KEY = 'YOUR_PINATA_SECRET_API_KEY'
+PINATA_API_KEY = 'cc7702120b0c25b5ebb3'
+PINATA_SECRET_API_KEY = 'aa66dd2d412cd48df633a5023e7fd4a59d181ca6a14897c70e0bbf5b56766593'
 
 def pin_to_ipfs(data):
     assert isinstance(data, dict), f"Error pin_to_ipfs expects a dictionary"
@@ -398,8 +398,8 @@ def pin_to_ipfs(data):
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
     headers = {
         "Content-Type": "application/json",
-        "cc7702120b0c25b5ebb3": PINATA_API_KEY,
-        "aa66dd2d412cd48df633a5023e7fd4a59d181ca6a14897c70e0bbf5b56766593": PINATA_SECRET_API_KEY
+        "pinata_api_key": str(PINATA_API_KEY),  # Ensure the keys are strings
+        "pinata_secret_api_key": str(PINATA_SECRET_API_KEY)  # Ensure the keys are strings
     }
     response = requests.post(url, data=json.dumps(data), headers=headers)
     if response.status_code == 200:
