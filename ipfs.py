@@ -270,28 +270,37 @@
 import requests
 import json
 
-pinata_api_key = '14b1d6f77160cb412d89'  
-pinata_secret_api_key = '50734ff2b62333d7dd06c593d919284bedb4dd359bdf61c2ce1c384d082f5a2b'
+pinata_api_key = '09e278d268fd8cafef67'  
 
 def pin_to_ipfs(data):
     assert isinstance(data, dict), "Error pin_to_ipfs expects a dictionary"
 
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
 
+    # payload = {
+    #     "pinataMetadata": {
+    #         "name": "PinnedData.json"
+    #     },
+    #     "pinataOptions": {
+    #         "cidVersion": 1
+    #     },
+    #     "pinataContent": data
+    # }
+
+    # headers = {
+    #     "Authorization": f"Bearer {pinata_api_key}",
+    #     "Content-Type": "application/json"
+    # }
+
+    # response = requests.post(url, json=payload, headers=headers)
+
+    payload = "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\nreadstream\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"pinataMetadata\"\r\n\r\n{\n  \"name\": \"Pinnie.json\"\n}\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"pinataOptions\"\r\n\r\n{\n  \"cidVersion\": 1\n}\r\n-----011000010111000001101001--\r\n\r\n"
     headers = {
-        "pinata_api_key": pinata_api_key,
-        "pinata_secret_api_key": pinata_secret_api_key
+        "Authorization": "Bearer <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyNmM1NmJjMS0yNGY0LTQ0ZjQtYjA0MC04N2ZjOGY4OTA5NmQiLCJlbWFpbCI6ImpjYXJiYWxAc2Vhcy51cGVubi5lZHUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMTRiMWQ2Zjc3MTYwY2I0MTJkODkiLCJzY29wZWRLZXlTZWNyZXQiOiI1MDczNGZmMmI2MjMzM2Q3ZGQwNmM1OTNkOTE5Mjg0YmVkYjRkZDM1OWJkZjYxYzJjZTFjMzg0ZDA4MmY1YTJiIiwiZXhwIjoxNzUxMzk2Mjk5fQ.w4GB3zPx0m3tQH8DcI5uMvgQvcnP-t1suAKhQwR8WK8>",
+        "Content-Type": "multipart/form-data"
     }
 
-    # Convert data to JSON string
-    data_json = json.dumps(data)
-
-    # Create the payload
-    files = {
-        'file': ('data.json', data_json, 'application/json')
-    }
-
-    response = requests.post(url, headers=headers, files=files)
+    response = requests.request("POST", url, data=payload, headers=headers)
 
     if response.status_code == 200:
         cid = response.json()["IpfsHash"]
@@ -327,4 +336,3 @@ if __name__ == "__main__":
         print(f"Data retrieved from IPFS: {retrieved_data}")
     except Exception as e:
         print(f"Error: {e}")
-
