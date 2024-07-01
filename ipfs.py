@@ -37,7 +37,7 @@ if response.status_code == 200:
 else:
     raise Exception(f"Error fetching from IPFS: {response.content}")
 
-if__name__ == "__main__":
+if __name__ == "__main__":
     test_data = {"name": "Bored Ape", "description": "Test Data"}
 
     cid = pin_to_ipfs(test_data)
