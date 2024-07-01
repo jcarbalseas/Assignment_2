@@ -249,11 +249,11 @@ headers = {
 response = requests.request("POST", url, data=payload, headers=headers)
 
 
-    if response.status_code == 200:
-        cid = response.json()["IpfsHash"]
-        return cid
-    else:
-        raise Exception(f"Error pinning to IPFS: {response.content}")
+if response.status_code == 200:
+    cid = response.json()["IpfsHash"]
+    return cid
+else:
+    raise Exception(f"Error pinning to IPFS: {response.content}")
 
 def get_from_ipfs(cid, content_type="json"):
     assert isinstance(cid, str), "get_from_ipfs accepts a cid in the form of a string"
