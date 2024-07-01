@@ -157,7 +157,7 @@
 import requests
 import json
 
-pinata_api_key = '50805c212bce9f9a5058'  # Replace with your actual Pinata API key
+pinata_api_key = '09e278d268fd8cafef67'  # Replace with your actual Pinata API key
 
 def pin_to_ipfs(data):
     assert isinstance(data, dict), "Error pin_to_ipfs expects a dictionary"
