@@ -270,7 +270,7 @@
 import requests
 import json
 
-pinata_api_key = '09e278d268fd8cafef67'  
+pinata_api_key = '14b1d6f77160cb412d89'  
 pinata_secret_api_key = '50734ff2b62333d7dd06c593d919284bedb4dd359bdf61c2ce1c384d082f5a2b'
 
 def pin_to_ipfs(data):
