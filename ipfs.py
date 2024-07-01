@@ -223,22 +223,31 @@ def pin_to_ipfs(data):
 
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
 
-    payload = {
-        "pinataMetadata": {
-            "name": "PinnedData.json"
-        },
-        "pinataOptions": {
-            "cidVersion": 1
-        },
-        "pinataContent": data
-    }
+    # payload = {
+    #     "pinataMetadata": {
+    #         "name": "PinnedData.json"
+    #     },
+    #     "pinataOptions": {
+    #         "cidVersion": 1
+    #     },
+    #     "pinataContent": data
+    # }
 
-    headers = {
-        "Authorization": f"Bearer {pinata_api_key}",
-        "Content-Type": "application/json"
-    }
+    # headers = {
+    #     "Authorization": f"Bearer {pinata_api_key}",
+    #     "Content-Type": "application/json"
+    # }
 
-    response = requests.post(url, json=payload, headers=headers)
+    # response = requests.post(url, json=payload, headers=headers)
+
+payload = "-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\nreadstream\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"pinataMetadata\"\r\n\r\n{\n  \"name\": \"Pinnie.json\"\n}\r\n-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"pinataOptions\"\r\n\r\n{\n  \"cidVersion\": 1\n}\r\n-----011000010111000001101001--\r\n\r\n"
+headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "multipart/form-data"
+}
+
+response = requests.request("POST", url, data=payload, headers=headers)
+
 
     if response.status_code == 200:
         cid = response.json()["IpfsHash"]
