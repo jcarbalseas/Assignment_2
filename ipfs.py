@@ -176,6 +176,7 @@ def pin_to_ipfs(data):
 
     headers = {
         "Authorization": f"Bearer {pinata_api_key}"
+        "Content-Type": "application/json"
     }
 
     response = requests.post(url, json=payload, headers=headers)
