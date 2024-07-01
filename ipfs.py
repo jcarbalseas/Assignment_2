@@ -175,7 +175,7 @@ def pin_to_ipfs(data):
     }
 
     headers = {
-        "Authorization": f"Bearer {pinata_api_key}"
+        "Authorization": f"Bearer {pinata_api_key}",
         "Content-Type": "application/json"
     }
 
