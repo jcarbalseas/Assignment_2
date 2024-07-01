@@ -279,13 +279,10 @@
 import requests
 import json
 
-# Replace with your Infura Project ID
-INFURA_PROJECT_ID = 'bfae8555ac6f497097223d4573f9c441'
-
 def pin_to_ipfs(data):
     assert isinstance(data, dict), "Error: pin_to_ipfs expects a dictionary"
 
-    url = f"https://ipfs.infura.io:5001/api/v0/add?pin=true"
+    url = "https://ipfs.infura.io:5001/api/v0/add?pin=true"
     files = {
         'file': ('data.json', json.dumps(data), 'application/json')
     }
