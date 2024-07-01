@@ -266,10 +266,11 @@
 #     except Exception as e:
 #         print(f"Error: {e}")
 
+
 import requests
 import json
 
-pinata_api_key = '14b1d6f77160cb412d89'  
+pinata_api_key = '09e278d268fd8cafef67'  
 pinata_secret_api_key = '50734ff2b62333d7dd06c593d919284bedb4dd359bdf61c2ce1c384d082f5a2b'
 
 def pin_to_ipfs(data):
@@ -277,20 +278,20 @@ def pin_to_ipfs(data):
 
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
 
-    # Construct the headers with the JWT token
     headers = {
-        "Authorization": f"Bearer {pinata_secret_api_key}",
-        "Content-Type": "multipart/form-data"
+        "pinata_api_key": pinata_api_key,
+        "pinata_secret_api_key": pinata_secret_api_key
     }
 
-    # Construct the payload (which seems to be incorrect in your example, consider revising)
-    payload = {
-        "file": json.dumps(data),  # This is assuming your data is JSON serializable
-        "pinataMetadata": {"name": "Pinnie.json"},
-        "pinataOptions": {"cidVersion": 1}
+    # Convert data to JSON string
+    data_json = json.dumps(data)
+
+    # Create the payload
+    files = {
+        'file': ('data.json', data_json, 'application/json')
     }
 
-    response = requests.post(url, headers=headers, files=payload)
+    response = requests.post(url, headers=headers, files=files)
 
     if response.status_code == 200:
         cid = response.json()["IpfsHash"]
