@@ -225,7 +225,7 @@ def pin_to_ipfs(data):
 
     payload = {
         "pinataMetadata": {
-            "name": "Pinnie.json"
+            "name": "PinnedData.json"
         },
         "pinataOptions": {
             "cidVersion": 1
@@ -246,6 +246,23 @@ def pin_to_ipfs(data):
     else:
         raise Exception(f"Error pinning to IPFS: {response.content}")
 
+def get_from_ipfs(cid, content_type="json"):
+    assert isinstance(cid, str), "get_from_ipfs accepts a cid in the form of a string"
+
+    url = f"https://gateway.pinata.cloud/ipfs/{cid}"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        if content_type == "json":
+            data = response.json()
+            assert isinstance(data, dict), "get_from_ipfs should return a dict"
+            return data
+        else:
+            raise Exception(f"Unsupported content type: {content_type}")
+    else:
+        raise Exception(f"Error fetching from IPFS: {response.content}")
+
 # Example usage
 if __name__ == "__main__":
     test_data = {"name": "Bored Ape", "description": "Test Data"}
@@ -253,5 +270,8 @@ if __name__ == "__main__":
     try:
         cid = pin_to_ipfs(test_data)
         print(f"Data pinned to IPFS with CID: {cid}")
+
+        retrieved_data = get_from_ipfs(cid)
+        print(f"Data retrieved from IPFS: {retrieved_data}")
     except Exception as e:
         print(f"Error: {e}")
